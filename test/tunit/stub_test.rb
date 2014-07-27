@@ -27,4 +27,19 @@ class StubTest < Minitest::Test
 
     assert_equal "undefined method `bar' for class `Object'", e.message
   end
+
+  def test_stub_keeps_the_already_existing_method_until_after_the_block
+    def obj.foo
+      42
+    end
+
+    tc = self
+
+    obj.stub :foo, 1337 do
+      tc.assert_includes obj.methods.map(&:to_s), "__temporary_stub_foo__"
+      tc.assert_equal 42, obj.send(:__temporary_stub_foo__)
+    end
+
+    assert_equal 42, obj.foo
+  end
 end

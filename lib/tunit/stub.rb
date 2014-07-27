@@ -1,6 +1,5 @@
 class Object
   def stub meth, return_value, &block
-    block ||= -> { nil }
     aliased_method_name = "__temporary_stub_#{meth}__"
 
     metaklass.send :alias_method, aliased_method_name, meth
@@ -9,7 +8,7 @@ class Object
       return_value
     end
 
-    block.call
+    yield
   ensure
     metaklass.send :undef_method, meth
     metaklass.send :alias_method, meth, aliased_method_name

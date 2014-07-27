@@ -1,4 +1,5 @@
 require "test_helper"
+remove_minitest_stub_definition!
 require "tunit/stub"
 
 class StubTest < Minitest::Test

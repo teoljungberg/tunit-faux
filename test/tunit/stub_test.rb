@@ -30,6 +30,18 @@ class StubTest < Minitest::Test
     end
   end
 
+  def test_stub_keeps_the_number_of_arguments_for_the_stub
+    def obj.foo n
+      n * 2
+    end
+
+    tc = self
+
+    obj.stub :foo, "stubbed" do
+      tc.assert_equal "stubbed", obj.foo("whatever")
+    end
+  end
+
   def test_stub_raises_hell_if_trying_to_stub_an_undefined_method
     refute_respond_to obj, :bar
 

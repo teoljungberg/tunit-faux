@@ -4,7 +4,9 @@ class Object
 
     metaklass.send :alias_method, aliased_method_name, meth
 
-    metaklass.send :define_method, meth do
+    metaklass.send :define_method, meth do |*args, &blk|
+      blk.call(*args) if blk
+
       return_value
     end
 

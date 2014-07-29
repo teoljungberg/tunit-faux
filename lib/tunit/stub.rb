@@ -8,7 +8,7 @@ class Object
       return_value
     end
 
-    yield
+    yield self
   ensure
     metaklass.send :undef_method, meth
     metaklass.send :alias_method, meth, aliased_method_name

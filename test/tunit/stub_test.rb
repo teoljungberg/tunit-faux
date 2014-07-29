@@ -18,6 +18,18 @@ class StubTest < Minitest::Test
     end
   end
 
+  def test_stub_yields_itself
+    def obj.foo
+      42
+    end
+
+    tc = self
+
+    obj.stub :foo, 1337 do |stub|
+      tc.assert_equal 1337, stub.foo
+    end
+  end
+
   def test_stub_raises_hell_if_trying_to_stub_an_undefined_method
     refute_respond_to obj, :bar
 

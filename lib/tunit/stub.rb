@@ -7,7 +7,11 @@ class Object
     metaklass.send :define_method, meth do |*args, &blk|
       blk.call(*args) if blk
 
-      return_value
+      if return_value.respond_to? :call
+        return_value.call(*args)
+      else
+        return_value
+      end
     end
 
     yield self

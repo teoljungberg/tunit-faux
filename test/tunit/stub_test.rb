@@ -30,15 +30,23 @@ class StubTest < Minitest::Test
     end
   end
 
-  def test_stub_keeps_the_number_of_arguments_for_the_stub
-    def obj.foo n
-      n * 2
+  def test_stub_block
+    def obj.foo
+      1
     end
 
     tc = self
 
-    obj.stub :foo, "stubbed" do
-      tc.assert_equal "stubbed", obj.foo("whatever")
+    obj.stub :foo, lambda {|n| n * 2 } do
+      tc.assert_equal 42, obj.foo(21)
+    end
+  end
+
+  def test_stubs_private_and_public_method
+    tc = self
+
+    tc.stub :private_method, "stubbed" do
+      tc.assert_equal "stubbed", tc.private_method
     end
   end
 
@@ -65,5 +73,11 @@ class StubTest < Minitest::Test
     end
 
     assert_equal 42, obj.foo
+  end
+
+  private
+
+  def private_method
+    1
   end
 end

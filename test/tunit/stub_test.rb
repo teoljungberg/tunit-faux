@@ -3,42 +3,39 @@ remove_minitest_stub_definition!
 require "tunit/stub"
 
 class StubTest < Minitest::Test
-  def setup
-    @obj = Object.new
-  end
-  attr_reader :obj
-
   def test_stub_only_stubs_already_defined_methods
-    obj.class.send :define_method, :foo, -> { 42 }
-
-    tc = self
-
-    obj.stub :foo, 1337 do
-      tc.assert_equal 1337, obj.foo
-    end
-  end
-
-  def test_stub_yields_itself
-    def obj.foo
+    def self.foo
       42
     end
 
     tc = self
 
-    obj.stub :foo, 1337 do |stub|
+    self.stub :foo, 1337 do
+      tc.assert_equal 1337, self.foo
+    end
+  end
+
+  def test_stub_yields_itself
+    def self.foo
+      42
+    end
+
+    tc = self
+
+    self.stub :foo, 1337 do |stub|
       tc.assert_equal 1337, stub.foo
     end
   end
 
   def test_stub_block
-    def obj.foo
+    def self.foo
       1
     end
 
     tc = self
 
-    obj.stub :foo, lambda {|n| n * 2 } do
-      tc.assert_equal 42, obj.foo(21)
+    self.stub :foo, lambda {|n| n * 2 } do
+      tc.assert_equal 42, self.foo(21)
     end
   end
 
@@ -51,28 +48,28 @@ class StubTest < Minitest::Test
   end
 
   def test_stub_raises_hell_if_trying_to_stub_an_undefined_method
-    refute_respond_to obj, :bar
+    refute_respond_to self, :bar
 
     e = assert_raises NameError do
-      obj.stub :bar, 1337 do end
+      self.stub :bar, 1337 do end
     end
 
-    assert_equal "undefined method `bar' for class `Object'", e.message
+    assert_equal "undefined method `bar' for class `StubTest'", e.message
   end
 
   def test_stub_keeps_the_already_existing_method_until_after_the_block
-    def obj.foo
+    def self.foo
       42
     end
 
     tc = self
 
-    obj.stub :foo, 1337 do
-      tc.assert_includes obj.methods.map(&:to_s), "__temporary_stub_foo__"
-      tc.assert_equal 42, obj.send(:__temporary_stub_foo__)
+    self.stub :foo, 1337 do
+      tc.assert_includes self.methods.map(&:to_s), "__temporary_stub_foo__"
+      tc.assert_equal 42, self.send(:__temporary_stub_foo__)
     end
 
-    assert_equal 42, obj.foo
+    assert_equal 42, self.foo
   end
 
   private

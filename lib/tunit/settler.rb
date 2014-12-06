@@ -16,7 +16,7 @@ module Tunit
     private
 
     def method_matches?
-      count = mock.calls.reduce(0) { |counter, mock|
+      count = matched_methods.reduce(0) { |counter, mock|
         counter += 1 if mock.method_name == method_name
       }
 
@@ -24,9 +24,15 @@ module Tunit
     end
 
     def arguments_matches?
-      mock.calls.any? { |mock|
+      matched_methods.any? { |mock|
         mock.arguments.include? arguments or
           mock.arguments == arguments
+      }
+    end
+
+    def matched_methods
+      mock.calls.select { |mock|
+        mock.method_name == method_name
       }
     end
   end

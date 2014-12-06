@@ -64,6 +64,17 @@ module Tunit
       assert_predicate settler, :satisfied?
     end
 
+    def test_satisfied_eh_times_mixed_methods
+      settler = Settler.new mock: mock, method_name: :foo, arguments: 1, times: 2
+
+      2.times do
+        mock.foo(1)
+      end
+      mock.bar!
+
+      assert_predicate settler, :satisfied?
+    end
+
     def test_satisfied_eh_fail_wrong_method_name
       settler = Settler.new mock: mock, method_name: :bar
 
@@ -83,9 +94,9 @@ module Tunit
     def test_satisfied_eh_fail_wrong_times
       settler = Settler.new mock: mock, method_name: :foo, arguments: 1, times: 2
 
-      mock.foo(1)
-      mock.foo(1)
-      mock.foo(1)
+      3.times do
+        mock.foo(1)
+      end
 
       refute_predicate settler, :satisfied?
     end

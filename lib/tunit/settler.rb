@@ -26,7 +26,8 @@ module Tunit
     def arguments_matches?
       matched_methods.any? { |mock|
         mock.arguments.include? arguments or
-          mock.arguments == arguments
+          arguments.first === mock.arguments.first or
+          arguments == mock.arguments
       }
     end
 

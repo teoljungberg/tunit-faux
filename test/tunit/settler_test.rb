@@ -75,6 +75,14 @@ module Tunit
       assert_predicate settler, :satisfied?
     end
 
+    def test_satisfied_eh_typecheck_arguments
+      settler = Settler.new mock: mock, method_name: :foo, arguments: String
+
+      mock.foo "this string can be what ever"
+
+      assert_predicate settler, :satisfied?
+    end
+
     def test_satisfied_eh_fail_wrong_method_name
       settler = Settler.new mock: mock, method_name: :bar
 

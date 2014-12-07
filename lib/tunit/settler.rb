@@ -5,7 +5,7 @@ module Tunit
     def initialize mock: nil, method_name: nil, arguments: [], times: 1
       @mock = mock
       @method_name = method_name
-      @arguments = arguments
+      @arguments = Array(arguments)
       @times = times
     end
 

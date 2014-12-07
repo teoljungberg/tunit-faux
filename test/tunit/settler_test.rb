@@ -24,7 +24,7 @@ module Tunit
     def test_arguments
       settler = Settler.new arguments: 2
 
-      assert_equal 2, settler.arguments
+      assert_equal [2], settler.arguments
     end
 
     def test_times

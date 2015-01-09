@@ -10,12 +10,30 @@ module Tunit
     end
 
     def satisfied?
-      method_matches? && arguments_matches?
+      match_method && match_arguments
+    end
+
+    def reason
+      build_message
     end
 
     private
 
-    def method_matches?
+    def build_message
+      message = ""
+
+      unless match_method
+        message += "Expected #{mock.class}##{method_name} "
+      end
+
+      unless match_arguments
+        message += "to have been called with #{arguments}"
+      end
+
+      message
+    end
+
+    def match_method
       count = matched_methods.reduce(0) { |counter, mock|
         counter += 1 if mock.method_name == method_name
       }
@@ -23,7 +41,7 @@ module Tunit
       count == times
     end
 
-    def arguments_matches?
+    def match_arguments
       matched_methods.any? { |mock|
         mock.arguments.include? arguments or
           arguments.first === mock.arguments.first or

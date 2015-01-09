@@ -108,5 +108,24 @@ module Tunit
 
       refute_predicate settler, :satisfied?
     end
+
+    def test_reason
+      settler = Settler.new mock: mock, method_name: :foo
+
+      mock.foo
+
+      assert_equal "", settler.reason
+    end
+
+    def test_reason_when_not_satisfied
+      settler = Settler.new mock: mock, method_name: :foo
+
+      mock.bar
+
+      exp_message = "Expected #{settler.mock.class}##{settler.method_name} "
+      exp_message += "to have been called with #{settler.arguments.inspect}"
+
+      assert_equal exp_message, settler.reason
+    end
   end
 end

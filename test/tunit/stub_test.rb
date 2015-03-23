@@ -4,74 +4,85 @@ require "tunit/stub"
 
 module Tunit
   class StubTest < Minitest::Test
-    def setup
-      @test_klass = self
-    end
-    attr_reader :test_klass
-
-    def test_stub_only_stubs_already_defined_methods
-      def self.foo
-        42
+    class Tester
+      def self.defined_class_method
       end
 
-      self.stub :foo, 1337 do
-        test_klass.assert_equal 1337, self.foo
+      def defined_instance_method
+      end
+
+      private
+
+      def private_instance_method
       end
     end
 
-    def test_stub_yields_itself
-      def self.foo
-        42
-      end
+    def test_stub_only_stubs_already_defined_methods_for_singletons
+      tc = self
 
-      self.stub :foo, 1337 do |stub|
-        test_klass.assert_equal 1337, stub.foo
+      Stub.stub Tester, :defined_class_method, 1 do
+        tc.assert_equal 1, Tester.defined_class_method
       end
     end
 
-    def test_stub_block
-      def self.foo
-        1
+    def test_stub_only_stubs_already_defined_methods_for_instances
+      tc = self
+      tester = Tester.new
+
+      Stub.stub tester, :defined_instance_method, 1 do
+        tc.assert_equal 1, tester.defined_instance_method
+      end
+    end
+
+    def test_stub_cleans_up_after_itself_singletons
+      tc = self
+
+      Stub.stub Tester, :defined_class_method, 1 do
+        tc.assert_equal 1, Tester.defined_class_method
       end
 
-      self.stub :foo, lambda {|n| n * 2 } do
-        test_klass.assert_equal 42, self.foo(21)
+      assert_nil Tester.defined_class_method
+    end
+
+    def test_stub_cleans_up_after_itself_instance
+      tc = self
+      tester = Tester.new
+
+      Stub.stub tester, :defined_instance_method, 1 do
+        tc.assert_equal 1, tester.defined_instance_method
       end
+
+      assert_nil tester.defined_instance_method
     end
 
     def test_stubs_private_and_public_method
-      test_klass.stub :private_method, "stubbed" do
-        test_klass.assert_equal "stubbed", test_klass.private_method
+      tc = self
+      tester = Tester.new
+
+      Stub.stub tester, :private_instance_method, 1 do
+        tc.assert_equal 1, tester.send(:private_instance_method)
       end
+
+      assert_nil tester.defined_instance_method
     end
 
     def test_stub_raises_hell_if_trying_to_stub_an_undefined_method
-      refute_respond_to self, :bar
+      tester = Tester.new
 
-      e = assert_raises NameError do
-        self.stub :bar, 1337 do end
+      assert_raises NameError do
+        Stub.stub tester, :i_am_not_here, 1 do end
       end
-
-      assert_equal "undefined method `bar' for class `Tunit::StubTest'", e.message
     end
 
     def test_stub_keeps_the_already_existing_method_until_after_the_block
-      def self.foo
-        42
+      require "date"
+      tc = self
+
+      Stub.stub Date, :today, 9999 do
+        tc.assert_instance_of Fixnum, Date.today
       end
 
-      self.stub :foo, 1337 do
-        test_klass.assert_includes self.methods.map(&:to_s), "__temporary_stub_foo__"
-        test_klass.assert_equal 42, self.send(:__temporary_stub_foo__)
-      end
-
-      assert_equal 42, self.foo
-    end
-
-    private
-
-    def private_method
-      1
+      assert_instance_of Time, Time.now
     end
   end
 end

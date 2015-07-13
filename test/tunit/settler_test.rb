@@ -4,31 +4,27 @@ require "tunit/mock"
 
 module Tunit
   class SettlerTest < Minitest::Test
-    def setup
-      @mock = Mock.new
-    end
-    attr_reader :mock
-
     def test_mock
-      settler = Settler.new mock: mock
+      mock = Mock.new
+      settler = Settler.new(mock: mock)
 
       assert_equal mock, settler.mock
     end
 
     def test_method_name
-      settler = Settler.new method_name: :foo
+      settler = Settler.new(method_name: :foo)
 
       assert_equal :foo, settler.method_name
     end
 
     def test_arguments
-      settler = Settler.new arguments: 2
+      settler = Settler.new(arguments: 2)
 
       assert_equal [2], settler.arguments
     end
 
     def test_times
-      settler = Settler.new times: 2
+      settler = Settler.new(times: 2)
 
       assert_equal 2, settler.times
     end
@@ -40,7 +36,8 @@ module Tunit
     end
 
     def test_satisfied_eh_method_name
-      settler = Settler.new mock: mock, method_name: :foo
+      mock = Mock.new
+      settler = Settler.new(mock: mock, method_name: :foo)
 
       mock.foo
 
@@ -48,7 +45,8 @@ module Tunit
     end
 
     def test_satisfied_eh_arguments
-      settler = Settler.new mock: mock, method_name: :foo, arguments: 1
+      mock = Mock.new
+      settler = Settler.new(mock: mock, method_name: :foo, arguments: 1)
 
       mock.foo(1)
 
@@ -56,7 +54,13 @@ module Tunit
     end
 
     def test_satisfied_eh_times
-      settler = Settler.new mock: mock, method_name: :foo, arguments: 1, times: 2
+      mock = Mock.new
+      settler = Settler.new(
+        mock: mock,
+        method_name: :foo,
+        arguments: 1,
+        times: 2,
+      )
 
       mock.foo(1)
       mock.foo(1)
@@ -65,7 +69,13 @@ module Tunit
     end
 
     def test_satisfied_eh_times_mixed_methods
-      settler = Settler.new mock: mock, method_name: :foo, arguments: 1, times: 2
+      mock = Mock.new
+      settler = Settler.new(
+        mock: mock,
+        method_name: :foo,
+        arguments: 1,
+        times: 2,
+      )
 
       2.times do
         mock.foo(1)
@@ -76,7 +86,8 @@ module Tunit
     end
 
     def test_satisfied_eh_typecheck_arguments
-      settler = Settler.new mock: mock, method_name: :foo, arguments: String
+      mock = Mock.new
+      settler = Settler.new(mock: mock, method_name: :foo, arguments: String)
 
       mock.foo "this string can be what ever"
 
@@ -84,7 +95,8 @@ module Tunit
     end
 
     def test_satisfied_eh_fail_wrong_method_name
-      settler = Settler.new mock: mock, method_name: :bar
+      mock = Mock.new
+      settler = Settler.new(mock: mock, method_name: :bar)
 
       mock.foo
 
@@ -92,7 +104,8 @@ module Tunit
     end
 
     def test_satisfied_eh_fail_wrong_arguments
-      settler = Settler.new mock: mock, method_name: :foo, arguments: :no
+      mock = Mock.new
+      settler = Settler.new(mock: mock, method_name: :foo, arguments: :no)
 
       mock.foo(1)
 
@@ -100,7 +113,13 @@ module Tunit
     end
 
     def test_satisfied_eh_fail_wrong_times
-      settler = Settler.new mock: mock, method_name: :foo, arguments: 1, times: 2
+      mock = Mock.new
+      settler = Settler.new(
+        mock: mock,
+        method_name: :foo,
+        arguments: 1,
+        times: 2,
+      )
 
       3.times do
         mock.foo(1)
@@ -110,7 +129,8 @@ module Tunit
     end
 
     def test_reason
-      settler = Settler.new mock: mock, method_name: :foo
+      mock = Mock.new
+      settler = Settler.new(mock: mock, method_name: :foo)
 
       mock.foo
 
@@ -118,7 +138,8 @@ module Tunit
     end
 
     def test_reason_when_not_satisfied
-      settler = Settler.new mock: mock, method_name: :foo
+      mock = Mock.new
+      settler = Settler.new(mock: mock, method_name: :foo)
 
       mock.bar
 

@@ -9,7 +9,7 @@ module Tunit
     attr_reader :mock
 
     def test_name
-      mock = Mock.new name: :my_mock
+      mock = Mock.new(name: :my_mock)
 
       assert_equal :my_mock, mock.name
     end
@@ -43,7 +43,7 @@ module Tunit
     end
 
     def test_method_missing_hides_its_implementation
-      assert_nil mock.foo(1)
+      assert_equal :foo, mock.foo(1)
     end
   end
 end

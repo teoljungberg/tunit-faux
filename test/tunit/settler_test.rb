@@ -53,100 +53,68 @@ module Tunit
       assert_predicate settler, :satisfied?
     end
 
-    def test_satisfied_eh_times
-      mock = Mock.new
-      settler = Settler.new(
-        mock: mock,
-        method_name: :foo,
-        arguments: 1,
-        times: 2,
-      )
-
-      mock.foo(1)
-      mock.foo(1)
-
-      assert_predicate settler, :satisfied?
-    end
-
-    def test_satisfied_eh_times_mixed_methods
-      mock = Mock.new
-      settler = Settler.new(
-        mock: mock,
-        method_name: :foo,
-        arguments: 1,
-        times: 2,
-      )
-
-      2.times do
-        mock.foo(1)
-      end
-      mock.bar!
-
-      assert_predicate settler, :satisfied?
-    end
-
-    def test_satisfied_eh_typecheck_arguments
+    def test_satisfied_eh_arguments_by_type
       mock = Mock.new
       settler = Settler.new(mock: mock, method_name: :foo, arguments: String)
 
-      mock.foo "this string can be what ever"
+      mock.foo("whatever")
 
       assert_predicate settler, :satisfied?
     end
 
-    def test_satisfied_eh_fail_wrong_method_name
+    def test_satisfied_eh_times
       mock = Mock.new
-      settler = Settler.new(mock: mock, method_name: :bar)
+      settler = Settler.new(mock: mock, method_name: :foo, times: 2)
 
       mock.foo
-
-      refute_predicate settler, :satisfied?
-    end
-
-    def test_satisfied_eh_fail_wrong_arguments
-      mock = Mock.new
-      settler = Settler.new(mock: mock, method_name: :foo, arguments: :no)
-
-      mock.foo(1)
-
-      refute_predicate settler, :satisfied?
-    end
-
-    def test_satisfied_eh_fail_wrong_times
-      mock = Mock.new
-      settler = Settler.new(
-        mock: mock,
-        method_name: :foo,
-        arguments: 1,
-        times: 2,
-      )
-
-      3.times do
-        mock.foo(1)
-      end
-
-      refute_predicate settler, :satisfied?
-    end
-
-    def test_reason
-      mock = Mock.new
-      settler = Settler.new(mock: mock, method_name: :foo)
-
       mock.foo
 
-      assert_equal "", settler.reason
+      assert_predicate settler, :satisfied?
     end
 
-    def test_reason_when_not_satisfied
+    def test_reason_method_name
       mock = Mock.new
       settler = Settler.new(mock: mock, method_name: :foo)
 
       mock.bar
 
-      exp_message = "Expected #{settler.mock.class}##{settler.method_name} "
-      exp_message += "to have been called with #{settler.arguments.inspect}"
+      refute_predicate settler, :satisfied?
 
-      assert_equal exp_message, settler.reason
+      exp_message = <<-EOS.strip_heredoc
+        Expected Tunit::Mock#foo to have been called
+      EOS
+
+      assert_equal exp_message.strip, settler.reason
+    end
+
+    def test_reason_arguments
+      mock = Mock.new
+      settler = Settler.new(mock: mock, method_name: :foo, arguments: 1)
+
+      mock.foo(2)
+
+      refute_predicate settler, :satisfied?
+
+      exp_message = <<-EOS.strip_heredoc
+        Expected Tunit::Mock#foo to have been called with [1], was called with [2]
+      EOS
+
+      assert_equal exp_message.strip, settler.reason
+    end
+
+    def test_reason_times
+      mock = Mock.new
+      settler = Settler.new(mock: mock, method_name: :foo, times: 2)
+
+      mock.foo
+
+      refute_predicate settler, :satisfied?
+
+      exp_message = <<-EOS.strip_heredoc
+        Expected Tunit::Mock#foo to have been called 2 times, was called 1 time
+      EOS
+
+      assert_equal exp_message.strip, settler.reason
     end
   end
 end

@@ -10,56 +10,72 @@ module Tunit
     end
 
     def satisfied?
-      match_method && match_arguments
+      matched_method_name? &&
+        matched_arguments? &&
+        matched_number_of_invocations?
     end
 
     def reason
-      build_message
-    end
-
-    private
-
-    def build_message
       message = ""
 
-      unless method_matched?
-        message += "Expected #{mock.class}##{method_name} "
-
-        unless arguments_matched?
-          message += "to have been called with #{arguments}"
-        end
+      if !matched_method_name?
+        message += "Expected #{mock.class}##{method_name} to have been called"
       end
 
+      if matched_method_name? && !matched_arguments?
+        actual_call = mock.calls.first
+        message += "Expected #{mock.class}##{method_name} to have been called "
+        message += "with #{arguments.inspect}, was called with #{actual_call.arguments.inspect}"
+      end
+
+      if matched_method_name? && !matched_number_of_invocations?
+        actual_call = mock.calls.first
+        message += "Expected #{mock.class}##{method_name} to have been called "
+        message += "#{times} #{pluralize_times(times)}"
+        message += ", was called #{matched_number_of_invocations} #{pluralize_times(matched_number_of_invocations)}"
+      end
 
       message
     end
 
-    def method_matched?
-      match_method == true
+    private
+
+    def matched_method_name?
+      mock.calls.any? do |call|
+        call.method_name == method_name
+      end
     end
 
-    def match_method
-      count = matched_methods.reduce(0) { |counter, mock|
-        counter += 1 if mock.method_name == method_name
+    def matched_arguments?
+      mock.calls.any? do |call|
+        same_arguments?(call) || same_type?(call)
+      end
+    end
+
+    def same_arguments?(call)
+      arguments == call.arguments
+    end
+
+    def same_type?(call)
+      arguments.first === call.arguments.first
+    end
+
+    def matched_number_of_invocations?
+      times == matched_number_of_invocations
+    end
+
+    def matched_number_of_invocations
+      mock.calls.reduce(0) { |counter, call|
+        counter = counter.succ if method_name == call.method_name
       }
-
-      count == times
     end
 
-    def arguments_matched?
-      matched_methods == true
-    end
-
-    def match_arguments
-      matched_methods.any? { |mock|
-        mock.arguments.include?(arguments) or
-          arguments.first === mock.arguments.first or
-          arguments == mock.arguments
-      }
-    end
-
-    def matched_methods
-      mock.calls.select { |mock| mock.method_name == method_name }
+    def pluralize_times(count)
+      if count > 1
+        "times"
+      else
+        "time"
+      end
     end
   end
 end

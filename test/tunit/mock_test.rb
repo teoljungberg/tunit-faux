@@ -38,7 +38,6 @@ module Tunit
 
       assert_equal :foo, method_call.method_name
       assert_equal [1], method_call.arguments
-      assert_equal method_call.args, method_call.arguments
       assert_instance_of Proc, method_call.block
     end
 

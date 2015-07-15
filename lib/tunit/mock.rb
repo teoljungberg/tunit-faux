@@ -19,13 +19,11 @@ module Tunit
     class MetohodCall
       attr_reader :method_name, :arguments, :block
 
-      def initialize(method_name: nil, arguments: [], block: nil)
+      def initialize(method_name:, arguments:, block:)
         @method_name = method_name
-        @arguments = arguments
-        @block ||= -> {}
+        @arguments = Array(arguments)
+        @block = block || -> {}
       end
-
-      alias_method :args, :arguments
     end
   end
 end

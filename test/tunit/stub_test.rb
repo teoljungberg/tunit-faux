@@ -70,7 +70,7 @@ module Tunit
       tester = Tester.new
 
       assert_raises NameError do
-        Stub.stub tester, :i_am_not_here, 1 do end
+        Stub.stub(tester, :i_am_not_here, 1) {}
       end
     end
 

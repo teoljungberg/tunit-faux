@@ -28,44 +28,6 @@ require 'tunit/faux'
 
 That will include both the mock- and stub-ing functionality.
 
-### Mock
-The `mock` is happy when everything goes well
-
-```ruby
->> mock = mock :my_mock
->> mock.foo = :bar
-=> :bar
->> mock.foo == :bar
-=> true
->> assert_received mock, :foo=, with: :bar
->> assert_received mock, :foo
-```
-
-`mock` raises `UnexpectedInvocation` if a mock is called faulty
-```ruby
->> mock.foo
->> mock.bar!
->> assert_received mock, :foo
-UnexpectedInvocation: :bar! was not expected to be called with []
-```
-
-`mock` raises `InvalidMock` if an expected method was called with the
-wrong arguments
-```ruby
->> mock.foo(1)
->> mock.foo(2)
->> assert_received mock, :foo, with: 1
-UnsatisfiedMock: :foo was not expected to be called with [2]
-```
-
-`mock` can be setup for calling any number of times, it defaults to 1
-```ruby
->> mock.foo(1)
->> mock.foo(1)
->> assert_received mock, :foo, with: 1, times: 2
-=> true
-```
-
 ### Stub
 `Object#stub` gives to the ability to stub a method for the duration of
 the given block.

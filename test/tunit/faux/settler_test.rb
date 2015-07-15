@@ -1,11 +1,11 @@
 require "test_helper"
-require "tunit/settler"
+require "tunit/faux/settler"
 require "tunit/mock"
 
-module Tunit
+module Tunit::Faux
   class SettlerTest < Minitest::Test
     def test_mock
-      mock = Mock.new
+      mock = Tunit::Mock.new
       settler = Settler.new(mock: mock)
 
       assert_equal mock, settler.mock
@@ -36,7 +36,7 @@ module Tunit
     end
 
     def test_satisfied_eh_method_name
-      mock = Mock.new
+      mock = Tunit::Mock.new
       settler = Settler.new(mock: mock, method_name: :foo)
 
       mock.foo
@@ -45,7 +45,7 @@ module Tunit
     end
 
     def test_satisfied_eh_arguments
-      mock = Mock.new
+      mock = Tunit::Mock.new
       settler = Settler.new(mock: mock, method_name: :foo, arguments: 1)
 
       mock.foo(1)
@@ -54,7 +54,7 @@ module Tunit
     end
 
     def test_satisfied_eh_arguments_by_type
-      mock = Mock.new
+      mock = Tunit::Mock.new
       settler = Settler.new(mock: mock, method_name: :foo, arguments: String)
 
       mock.foo("whatever")
@@ -63,7 +63,7 @@ module Tunit
     end
 
     def test_satisfied_eh_times
-      mock = Mock.new
+      mock = Tunit::Mock.new
       settler = Settler.new(mock: mock, method_name: :foo, times: 2)
 
       mock.foo
@@ -73,7 +73,7 @@ module Tunit
     end
 
     def test_reason_method_name
-      mock = Mock.new
+      mock = Tunit::Mock.new
       settler = Settler.new(mock: mock, method_name: :foo)
 
       mock.bar
@@ -84,11 +84,11 @@ module Tunit
         Expected Tunit::Mock#foo to have been called
       EOS
 
-      assert_equal exp_message.strip, settler.reason
+      assert_equal exp_message.strip, settler.reason.strip
     end
 
     def test_reason_arguments
-      mock = Mock.new
+      mock = Tunit::Mock.new
       settler = Settler.new(mock: mock, method_name: :foo, arguments: 1)
 
       mock.foo(2)
@@ -99,11 +99,11 @@ module Tunit
         Expected Tunit::Mock#foo to have been called with [1], was called with [2]
       EOS
 
-      assert_equal exp_message.strip, settler.reason
+      assert_equal exp_message.strip, settler.reason.strip
     end
 
     def test_reason_times
-      mock = Mock.new
+      mock = Tunit::Mock.new
       settler = Settler.new(mock: mock, method_name: :foo, times: 2)
 
       mock.foo
@@ -114,7 +114,7 @@ module Tunit
         Expected Tunit::Mock#foo to have been called 2 times, was called 1 time
       EOS
 
-      assert_equal exp_message.strip, settler.reason
+      assert_equal exp_message.strip, settler.reason.strip
     end
   end
 end

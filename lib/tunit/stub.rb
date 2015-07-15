@@ -40,9 +40,5 @@ module Tunit
       metaklass.send :alias_method, method_name, @aliased_method_name
       metaklass.send :undef_method, @aliased_method_name
     end
-
-    private
-
-    StubContainer = Struct.new(:object, :method_name, :return_value)
   end
 end

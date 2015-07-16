@@ -31,7 +31,7 @@ module Tunit::Faux::Reporters
       mock.foo
 
       exp_report = <<-EOS
-        Expected Tunit::Mock#foo to have been called 1 time, was called 2 times
+        Expected Tunit::Mock#foo[] to have been called 1 time, was called 2 times
       EOS
 
       assert_equal exp_report.strip, reporter.report

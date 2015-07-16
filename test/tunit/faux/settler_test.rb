@@ -4,37 +4,6 @@ require "tunit/mock"
 
 module Tunit::Faux
   class SettlerTest < Minitest::Test
-    def test_mock
-      mock = Tunit::Mock.new
-      settler = Settler.new(mock: mock)
-
-      assert_equal mock, settler.mock
-    end
-
-    def test_method_name
-      settler = Settler.new(method_name: :foo)
-
-      assert_equal :foo, settler.method_name
-    end
-
-    def test_arguments
-      settler = Settler.new(arguments: 2)
-
-      assert_equal [2], settler.arguments
-    end
-
-    def test_times
-      settler = Settler.new(times: 2)
-
-      assert_equal 2, settler.times
-    end
-
-    def test_times_fallback
-      settler = Settler.new
-
-      assert_equal 1, settler.times
-    end
-
     def test_satisfied_eh_method_name
       mock = Tunit::Mock.new
       settler = Settler.new(mock: mock, method_name: :foo)
@@ -81,7 +50,7 @@ module Tunit::Faux
       refute_predicate settler, :satisfied?
 
       exp_message = <<-EOS.strip_heredoc
-        Expected Tunit::Mock#foo to have been called
+        Expected Tunit::Mock#foo[] to have been called
       EOS
 
       assert_equal exp_message.strip, settler.reason.strip
@@ -96,7 +65,7 @@ module Tunit::Faux
       refute_predicate settler, :satisfied?
 
       exp_message = <<-EOS.strip_heredoc
-        Expected Tunit::Mock#foo to have been called with [1], was called with [2]
+        Expected Tunit::Mock#foo[1] to have been called, was called with [2]
       EOS
 
       assert_equal exp_message.strip, settler.reason.strip
@@ -111,7 +80,29 @@ module Tunit::Faux
       refute_predicate settler, :satisfied?
 
       exp_message = <<-EOS.strip_heredoc
-        Expected Tunit::Mock#foo to have been called 2 times, was called 1 time
+        Expected Tunit::Mock#foo[] to have been called 2 times, was called 1 time
+      EOS
+
+      assert_equal exp_message.strip, settler.reason.strip
+    end
+
+    def test_reason_times_with_arguments
+      mock = Tunit::Mock.new
+      settler = Settler.new(
+        arguments: 1,
+        method_name: :foo,
+        mock: mock,
+        times: 2,
+      )
+
+      mock.foo(1)
+      mock.foo(1)
+      mock.foo(1)
+
+      refute_predicate settler, :satisfied?
+
+      exp_message = <<-EOS.strip_heredoc
+        Expected Tunit::Mock#foo[1] to have been called 2 times, was called 3 times
       EOS
 
       assert_equal exp_message.strip, settler.reason.strip

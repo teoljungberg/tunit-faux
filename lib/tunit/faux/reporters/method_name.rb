@@ -1,14 +1,9 @@
+require "tunit/faux/reporters/base"
+
 module Tunit
   module Faux
     module Reporters
-      class MethodName
-        attr_reader :method_name, :mock
-
-        def initialize(method_name:, mock:)
-          @method_name = method_name
-          @mock = mock
-        end
-
+      class MethodName < Base
         def run
           mock.calls.any? do |call|
             call.method_name == method_name
@@ -17,7 +12,7 @@ module Tunit
 
         def report
           if violation?
-            "Expected #{mock.class}##{method_name} to have been called"
+            base_message.strip
           end
         end
 

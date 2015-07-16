@@ -1,23 +1,17 @@
+require "tunit/faux/reporters/base"
+
 module Tunit
   module Faux
     module Reporters
-      class Times
-        attr_reader :method_name, :times, :mock
-
-        def initialize(method_name:, times:, mock:)
-          @method_name = method_name
-          @times = times
-          @mock = mock
-        end
-
+      class Times < Base
         def run
           number_of_invocations == times
         end
 
         def report
           if violation?
-            "Expected #{mock.class}##{method_name} to have been called " +
-              "#{times} #{pluralize_times(times)}, " +
+            base_message +
+              " #{times} #{pluralize_times(times)}, " +
               "was called " +
               "#{number_of_invocations} #{pluralize_times(number_of_invocations)}"
           end

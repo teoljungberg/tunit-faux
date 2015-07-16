@@ -15,11 +15,11 @@ module Tunit::Faux::Reporters
 
     def test_run_arguments_of_same_type
       mock = Tunit::Mock.new
-      reporter = Arguments.new(method_name: :foo, arguments: Fixnum, mock: mock)
+      reporter = Arguments.new(method_name: :foo, arguments: [Time.now], mock: mock)
 
-      mock.foo(9999)
+      mock.foo
 
-      assert reporter.run
+      refute reporter.run
     end
 
     def test_report_violation
@@ -29,7 +29,7 @@ module Tunit::Faux::Reporters
       mock.foo(2)
 
       exp_report = <<-EOS
-        Expected Tunit::Mock#foo to have been called with [1], was called with [2]
+        Expected Tunit::Mock#foo[1] to have been called, was called with [2]
       EOS
 
       assert_equal exp_report.strip, reporter.report

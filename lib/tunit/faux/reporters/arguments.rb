@@ -1,17 +1,9 @@
-require "tunit/mock"
+require "tunit/faux/reporters/base"
 
 module Tunit
   module Faux
     module Reporters
-      class Arguments
-        attr_reader :method_name, :arguments, :mock
-
-        def initialize(method_name:, arguments:, mock:)
-          @method_name = method_name
-          @arguments = Array(arguments)
-          @mock = mock
-        end
-
+      class Arguments < Base
         def run
           mock.calls.any? do |call|
             same_arguments?(call) || same_argument_type?(call)
@@ -20,9 +12,7 @@ module Tunit
 
         def report
           if violation?
-            "Expected #{mock.class}##{method_name} to have been called " +
-              "with #{arguments.inspect}, " +
-              "was called with #{violating_call.arguments.inspect}"
+            "#{base_message}, was called with #{violating_call.arguments}"
           end
         end
 
@@ -41,8 +31,8 @@ module Tunit
         end
 
         def same_argument_type?(call)
-          call.arguments.all? do |argument|
-            arguments.first === argument
+          call.arguments.any? && call.arguments.all? do |argument|
+            argument.class.ancestors.include?(arguments.first)
           end
         end
       end

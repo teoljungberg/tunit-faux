@@ -6,7 +6,10 @@ module Tunit::Faux::Reporters
   class MethodNameTest < Minitest::Test
     def test_run
       mock = Tunit::Mock.new
-      reporter = MethodName.new(method_name: :foo, mock: mock)
+      reporter = MethodName.new(
+        method_name: :foo,
+        mock: mock,
+      )
 
       mock.foo
 
@@ -29,7 +32,7 @@ module Tunit::Faux::Reporters
       mock.bar
 
       exp_report = <<-EOS
-        Expected Tunit::Mock#foo to have been called
+        Expected Tunit::Mock#foo[] to have been called
       EOS
 
       assert_equal exp_report.strip, reporter.report

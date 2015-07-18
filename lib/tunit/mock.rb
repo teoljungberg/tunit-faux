@@ -1,29 +1,16 @@
+require "tunit/mock/double"
+require "tunit/mock/null_object"
+
 module Tunit
-  class Mock
-    attr_reader :name, :calls
+  module Mock
+    TYPE_LOOKUP = {
+      null_object: NullObject,
+      spy: Spy,
+    }
+    TYPE_LOOKUP.default = Double
 
-    def initialize(name: :mock)
-      @name = name
-      @calls = []
-    end
-
-    def method_missing(method_name, *args, &block)
-      calls << MetohodCall.new(
-        method_name: method_name,
-        arguments: args,
-        block: block,
-      )
-      method_name
-    end
-
-    class MetohodCall
-      attr_reader :method_name, :arguments, :block
-
-      def initialize(method_name:, arguments:, block:)
-        @method_name = method_name
-        @arguments = Array(arguments)
-        @block = block || -> {}
-      end
+    def self.new(type = nil)
+      TYPE_LOOKUP[type].new
     end
   end
 end

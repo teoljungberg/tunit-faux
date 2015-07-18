@@ -3,46 +3,28 @@ require "tunit/mock"
 
 module Tunit
   class MockTest < Minitest::Test
-    def setup
-      @mock = Mock.new
-    end
-    attr_reader :mock
-
-    def test_name
-      mock = Mock.new(name: :my_mock)
-
-      assert_equal :my_mock, mock.name
-    end
-
-    def test_name_fallback
+    def test_new
       mock = Mock.new
 
-      assert_equal :mock, mock.name
+      assert_instance_of Mock::Double, mock
     end
 
-    def test_calls
-      assert_instance_of Array, mock.calls
-      assert_empty mock.calls
+    def test_new_unsupported_types
+      mock = Mock.new(:unsupported_type)
+
+      assert_instance_of Mock::Double, mock
     end
 
-    def test_method_missing_gathers_calls
-      mock.foo(1)
-      mock.foo(2)
+    def test_new_null_object
+      mock = Mock.new(:null_object)
 
-      assert_equal 2, mock.calls.size
+      assert_instance_of Mock::NullObject, mock
     end
 
-    def test_method_missing_wraps_calls_as_an_object
-      mock.foo(1)
-      method_call = mock.calls.first
+    def test_new_spy
+      mock = Mock.new(:spy)
 
-      assert_equal :foo, method_call.method_name
-      assert_equal [1], method_call.arguments
-      assert_instance_of Proc, method_call.block
-    end
-
-    def test_method_missing_hides_its_implementation
-      assert_equal :foo, mock.foo(1)
+      assert_instance_of Mock::Spy, mock
     end
   end
 end

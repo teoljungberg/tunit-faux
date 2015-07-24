@@ -36,5 +36,16 @@ module Tunit::Faux::Reporters
 
       assert_equal exp_report.strip, reporter.report
     end
+
+    def test_result_on_failure_zero_times
+      mock = Tunit::Mock.new(:spy)
+      reporter = Times.new(method_name: :foo, times: 1, mock: mock)
+
+      exp_report = <<-EOS
+        Expected Tunit::Mock::Spy#foo[] to have been called 1 time, was called 0 times
+      EOS
+
+      assert_equal exp_report.strip, reporter.report
+    end
   end
 end

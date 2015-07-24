@@ -34,7 +34,7 @@ module Tunit
         end
 
         def pluralize_times(count)
-          if count > 1
+          if count > 1 || count.zero?
             "times"
           else
             "time"

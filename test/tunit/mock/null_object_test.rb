@@ -2,9 +2,9 @@ require "test_helper"
 require "tunit/mock/null_object"
 
 module Tunit::Mock
-  module ActsLikeANullObject
+  class NullObjectTest < Minitest::Test
     def test_method_missing_gathers_all_calls
-      mock = klass.new
+      mock = NullObject.new
 
       mock.foo.bar.baz
 
@@ -12,25 +12,15 @@ module Tunit::Mock
     end
 
     def test_method_missing_acts_as_a_null_object
-      mock = klass.new
+      mock = NullObject.new
 
       assert_equal mock, mock.whatever
     end
   end
 
-  class NullObjectTest < Minitest::Test
-    include ActsLikeANullObject
-
-    def klass
-      NullObject
-    end
-  end
-
   class SpyTest < Minitest::Test
-    include ActsLikeANullObject
-
-    def klass
-      Spy
+    def test_works_as_a_null_object
+      assert Spy < NullObject
     end
   end
 end

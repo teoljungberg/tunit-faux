@@ -1,9 +1,10 @@
 module Tunit
   module Mock
     class Base
-      attr_reader :calls
+      attr_reader :name, :calls
 
-      def initialize
+      def initialize(name = nil)
+        @name = name || DEFAULT_NAME
         @calls = []
       end
 
@@ -16,6 +17,22 @@ module Tunit
         method_name
       end
 
+      def inspect
+        "#<%{class} (%{name})>" % {
+          class: normaized_class_name,
+          name: name,
+        }
+      end
+
+      private
+
+      DEFAULT_NAME = "anonymous"
+      private_constant :DEFAULT_NAME
+
+      def normaized_class_name
+        self.class.to_s.sub("Tunit::Mock::", "")
+      end
+
       class MetohodCall
         attr_reader :method_name, :arguments, :block
 
@@ -25,6 +42,7 @@ module Tunit
           @block = block || -> {}
         end
       end
+      private_constant :MetohodCall
     end
   end
 end

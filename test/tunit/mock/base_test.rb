@@ -3,6 +3,18 @@ require "tunit/mock/base"
 
 module Tunit::Mock
   class BaseTest < Minitest::Test
+    def test_name
+      mock = Base.new("hello")
+
+      assert_equal "hello", mock.name
+    end
+
+    def test_name_fallback
+      mock = Base.new
+
+      assert_equal "anonymous", mock.name
+    end
+
     def test_calls
       mock = Base.new
 
@@ -34,6 +46,12 @@ module Tunit::Mock
       mock = Base.new
 
       assert_equal :foo, mock.foo(1)
+    end
+
+    def test_inspect
+      mock = Base.new
+
+      assert_equal "#<Base (anonymous)>", mock.inspect
     end
   end
 end

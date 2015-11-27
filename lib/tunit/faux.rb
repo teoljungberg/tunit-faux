@@ -1,5 +1,6 @@
+require "tunit/faux/minitest"
 require "tunit/faux/reporters"
 require "tunit/faux/settler"
 require "tunit/faux/version"
-require "tunit/stub"
 require "tunit/mock"
+require "tunit/stub"

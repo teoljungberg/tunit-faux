@@ -35,6 +35,17 @@ module Tunit::Faux::Reporters
       assert_equal exp_report.strip, reporter.report
     end
 
+    def test_report_no_calls
+      mock = Tunit::Mock.new(:spy)
+      reporter = Arguments.new(method_name: :foo, mock: mock)
+
+      exp_report = <<-EOS
+        Expected Tunit::Mock::Spy#foo[] to have been called, was called with []
+      EOS
+
+      assert_equal exp_report.strip, reporter.report
+    end
+
     def test_report_bug
       mock = Tunit::Mock.new(:spy)
       reporter = Arguments.new(method_name: :foo, arguments: [], mock: mock)

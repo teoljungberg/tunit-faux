@@ -41,6 +41,13 @@ module Tunit::Faux
       assert_predicate settler, :satisfied?
     end
 
+    def test_satisfied_eh_not_called
+      mock = Tunit::Mock.new(:spy)
+      settler = Settler.new(mock: mock, method_name: :foo)
+
+      refute_predicate settler, :satisfied?
+    end
+
     def test_reason_method_name
       mock = Tunit::Mock.new(:spy)
       settler = Settler.new(mock: mock, method_name: :foo)
@@ -103,6 +110,19 @@ module Tunit::Faux
 
       exp_message = <<-EOS.strip_heredoc
         Expected Tunit::Mock::Spy#foo[1] to have been called 2 times, was called 3 times
+      EOS
+
+      assert_equal exp_message.strip, settler.reason.strip
+    end
+
+    def test_reason_not_called
+      mock = Tunit::Mock.new(:spy)
+      settler = Settler.new(method_name: :foo, mock: mock)
+
+      refute_predicate settler, :satisfied?
+
+      exp_message = <<-EOS.strip_heredoc
+        Expected Tunit::Mock::Spy#foo[] to have been called
       EOS
 
       assert_equal exp_message.strip, settler.reason.strip

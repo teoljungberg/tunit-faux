@@ -23,7 +23,7 @@ module Tunit
         end
 
         def violating_call
-          mock.calls.first
+          mock.calls.first || NullCall.new
         end
 
         def same_arguments?(call)
@@ -35,6 +35,13 @@ module Tunit
             argument.class.ancestors.include?(arguments.first)
           end
         end
+
+        class NullCall
+          def arguments
+            []
+          end
+        end
+        private_constant :NullCall
       end
     end
   end

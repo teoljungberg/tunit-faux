@@ -1,13 +1,13 @@
 module Tunit
   class Stub
-    def self.stub(object, method_name, return_value)
+    def self.stub(object, method_name, return_value, &block)
       aliased_method_name = "__temporary_stub_#{method_name}__"
 
-      if block_given?
+      if block
         instance = new(aliased_method_name)
         instance.stub(object, method_name, return_value)
 
-        yield
+        block.call
 
         instance.unstub(object, method_name)
       end

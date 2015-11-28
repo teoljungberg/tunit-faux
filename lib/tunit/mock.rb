@@ -9,8 +9,8 @@ module Tunit
     }
     TYPE_LOOKUP.default = Double
 
-    def self.new(type = nil)
-      TYPE_LOOKUP[type].new
+    def self.new(type = nil, *args)
+      TYPE_LOOKUP[type].new(args)
     end
   end
 end

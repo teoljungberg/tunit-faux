@@ -8,7 +8,8 @@ module Tunit
       attr_reader :expected_methods
 
       def initialize(*stubs)
-        name = stubs.shift if stubs.first.is_a? String
+        stubs = stubs.flatten
+        name = calculate_name(stubs)
         super(name)
         assign_stubs(stubs)
       end
@@ -25,8 +26,9 @@ module Tunit
       private
 
       def assign_stubs(stubs)
-        if stubs.first.is_a? Hash
-          @expected_methods = stubs.shift
+        stubs = stubs.detect { |element| element.is_a? Hash }
+        if stubs
+          @expected_methods = stubs
         else
           @expected_methods = {}
         end

@@ -3,8 +3,8 @@ module Tunit
     class Base
       attr_reader :name, :calls
 
-      def initialize(name = nil)
-        @name = name || DEFAULT_NAME
+      def initialize(*stubs)
+        @name = calculate_name(stubs)
         @calls = []
       end
 
@@ -31,6 +31,15 @@ module Tunit
 
       def normaized_class_name
         self.class.to_s.sub("Tunit::Mock::", "")
+      end
+
+      def calculate_name(stubs)
+        stubs = stubs.flatten
+        if stubs.first.is_a? String
+          stubs.shift
+        else
+          DEFAULT_NAME
+        end
       end
 
       class MetohodCall

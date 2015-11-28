@@ -9,6 +9,13 @@ module Tunit
       assert_instance_of Mock::Double, mock
     end
 
+    def test_new_with_arguments
+      mock = Mock.new(nil, "name")
+
+      assert_equal "name", mock.name
+      assert_instance_of Mock::Double, mock
+    end
+
     def test_new_unsupported_types
       mock = Mock.new(:unsupported_type)
 

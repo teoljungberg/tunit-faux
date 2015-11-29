@@ -57,7 +57,7 @@ module Tunit::Faux
       refute_predicate settler, :satisfied?
 
       exp_message = <<-EOS.strip_heredoc
-        Expected Tunit::Mock::Spy#foo[] to have been called
+        Expected Spy(anonymous)#foo[] to have been called
       EOS
 
       assert_equal exp_message.strip, settler.reason.strip
@@ -72,7 +72,7 @@ module Tunit::Faux
       refute_predicate settler, :satisfied?
 
       exp_message = <<-EOS.strip_heredoc
-        Expected Tunit::Mock::Spy#foo[1] to have been called, was called with [2]
+        Expected Spy(anonymous)#foo[1] to have been called, was called with [2]
       EOS
 
       assert_equal exp_message.strip, settler.reason.strip
@@ -87,7 +87,7 @@ module Tunit::Faux
       refute_predicate settler, :satisfied?
 
       exp_message = <<-EOS.strip_heredoc
-        Expected Tunit::Mock::Spy#foo[] to have been called 2 times, was called 1 time
+        Expected Spy(anonymous)#foo[] to have been called 2 times, was called 1 time
       EOS
 
       assert_equal exp_message.strip, settler.reason.strip
@@ -109,7 +109,7 @@ module Tunit::Faux
       refute_predicate settler, :satisfied?
 
       exp_message = <<-EOS.strip_heredoc
-        Expected Tunit::Mock::Spy#foo[1] to have been called 2 times, was called 3 times
+        Expected Spy(anonymous)#foo[1] to have been called 2 times, was called 3 times
       EOS
 
       assert_equal exp_message.strip, settler.reason.strip
@@ -122,7 +122,7 @@ module Tunit::Faux
       refute_predicate settler, :satisfied?
 
       exp_message = <<-EOS.strip_heredoc
-        Expected Tunit::Mock::Spy#foo[] to have been called
+        Expected Spy(anonymous)#foo[] to have been called
       EOS
 
       assert_equal exp_message.strip, settler.reason.strip

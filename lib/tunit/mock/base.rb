@@ -18,7 +18,7 @@ module Tunit
       end
 
       def inspect
-        "#<%{class} (%{name})>" % {
+        "%{class}(%{name})" % {
           class: normaized_class_name,
           name: name,
         }

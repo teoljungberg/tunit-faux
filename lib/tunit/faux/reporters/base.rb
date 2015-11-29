@@ -14,7 +14,11 @@ module Tunit
         private
 
         def base_message
-          "Expected #{mock.class}##{method_name}#{arguments} to have been called"
+          "Expected %{mock}#%{method_name}%{arguments} to have been called" % {
+            mock: mock.inspect,
+            method_name: method_name,
+            arguments: arguments.inspect,
+          }
         end
       end
     end

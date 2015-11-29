@@ -31,7 +31,7 @@ module Tunit::Faux::Reporters
       mock.foo
 
       exp_report = <<-EOS
-        Expected Tunit::Mock::Spy#foo[] to have been called 1 time, was called 2 times
+        Expected Spy(anonymous)#foo[] to have been called 1 time, was called 2 times
       EOS
 
       assert_equal exp_report.strip, reporter.report
@@ -42,7 +42,7 @@ module Tunit::Faux::Reporters
       reporter = Times.new(method_name: :foo, times: 1, mock: mock)
 
       exp_report = <<-EOS
-        Expected Tunit::Mock::Spy#foo[] to have been called 1 time, was called 0 times
+        Expected Spy(anonymous)#foo[] to have been called 1 time, was called 0 times
       EOS
 
       assert_equal exp_report.strip, reporter.report

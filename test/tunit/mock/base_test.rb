@@ -51,7 +51,7 @@ module Tunit::Mock
     def test_inspect
       mock = Base.new
 
-      assert_equal "#<Base (anonymous)>", mock.inspect
+      assert_equal "Base(anonymous)", mock.inspect
     end
   end
 end

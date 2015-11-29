@@ -32,7 +32,7 @@ module Tunit::Faux::Reporters
       mock.bar
 
       exp_report = <<-EOS
-        Expected Tunit::Mock::Spy#foo[] to have been called
+        Expected Spy(anonymous)#foo[] to have been called
       EOS
 
       assert_equal exp_report.strip, reporter.report

@@ -39,7 +39,7 @@ module Tunit::Mock
     def test_inspect_with_whitelisted_methods
       double = Double.new("mocked_user", foo: 1)
 
-      assert_equal "#<Double (mocked_user)>", double.inspect
+      assert_equal "Double(mocked_user)", double.inspect
     end
   end
 end

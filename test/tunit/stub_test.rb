@@ -1,5 +1,4 @@
 require "test_helper"
-remove_minitest_stub_definition!
 require "tunit/stub"
 
 module Tunit

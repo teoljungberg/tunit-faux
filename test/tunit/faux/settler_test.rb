@@ -15,7 +15,7 @@ module Tunit::Faux
 
     def test_satisfied_eh_arguments
       mock = Tunit::Mock.new(:spy)
-      settler = Settler.new(mock: mock, method_name: :foo, arguments: 1)
+      settler = Settler.new(mock: mock, method_name: :foo, arguments: [1])
 
       mock.foo(1)
 
@@ -24,7 +24,7 @@ module Tunit::Faux
 
     def test_satisfied_eh_arguments_by_type
       mock = Tunit::Mock.new(:spy)
-      settler = Settler.new(mock: mock, method_name: :foo, arguments: String)
+      settler = Settler.new(mock: mock, method_name: :foo, arguments: [String])
 
       mock.foo("whatever")
 
@@ -65,7 +65,7 @@ module Tunit::Faux
 
     def test_reason_arguments
       mock = Tunit::Mock.new(:spy)
-      settler = Settler.new(mock: mock, method_name: :foo, arguments: 1)
+      settler = Settler.new(mock: mock, method_name: :foo, arguments: [1])
 
       mock.foo(2)
 
@@ -96,7 +96,7 @@ module Tunit::Faux
     def test_reason_times_with_arguments
       mock = Tunit::Mock.new(:spy)
       settler = Settler.new(
-        arguments: 1,
+        arguments: [1],
         method_name: :foo,
         mock: mock,
         times: 2,

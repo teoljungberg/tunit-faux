@@ -6,7 +6,7 @@ module Tunit
       attr_reader :arguments, :method_name, :times, :mock
 
       def initialize(arguments: [], method_name:, mock:, times: 1)
-        @arguments = Array(arguments)
+        @arguments = arguments
         @method_name = method_name
         @mock = mock
         @times = times

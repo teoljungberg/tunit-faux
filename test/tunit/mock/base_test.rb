@@ -42,6 +42,17 @@ module Tunit::Mock
       assert_instance_of Proc, method_call.block
     end
 
+    def test_method_missing_keeps_arguments_intact
+      mock = Base.new
+
+      mock.foo(a: 1)
+      method_call = mock.calls.first
+
+      assert_equal :foo, method_call.method_name
+      assert_equal [{ a: 1 }], method_call.arguments
+      assert_instance_of Proc, method_call.block
+    end
+
     def test_method_missing_hides_its_implementation
       mock = Base.new
 

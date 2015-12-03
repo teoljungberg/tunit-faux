@@ -6,7 +6,7 @@ module Tunit::Faux::Reporters
   class ArgumentsTest < Minitest::Test
     def test_run_same_arguments
       mock = Tunit::Mock.new(:spy)
-      reporter = Arguments.new(method_name: :foo, arguments: 1, mock: mock)
+      reporter = Arguments.new(method_name: :foo, arguments: [1], mock: mock)
 
       mock.foo(1)
 
@@ -24,7 +24,7 @@ module Tunit::Faux::Reporters
 
     def test_report_violation
       mock = Tunit::Mock.new(:spy)
-      reporter = Arguments.new(method_name: :foo, arguments: 1, mock: mock)
+      reporter = Arguments.new(method_name: :foo, arguments: [1], mock: mock)
 
       mock.foo(2)
 
@@ -44,15 +44,6 @@ module Tunit::Faux::Reporters
       EOS
 
       assert_equal exp_report.strip, reporter.report
-    end
-
-    def test_report_bug
-      mock = Tunit::Mock.new(:spy)
-      reporter = Arguments.new(method_name: :foo, arguments: [], mock: mock)
-
-      mock.bar
-
-      assert_nil reporter.report
     end
   end
 end

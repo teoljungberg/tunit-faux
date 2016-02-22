@@ -56,7 +56,7 @@ module Tunit::Faux
 
       refute_predicate settler, :satisfied?
 
-      exp_message = <<-EOS.strip_heredoc
+      exp_message = <<~EOS
         Expected Spy(anonymous)#foo[] to have been called
       EOS
 
@@ -71,7 +71,7 @@ module Tunit::Faux
 
       refute_predicate settler, :satisfied?
 
-      exp_message = <<-EOS.strip_heredoc
+      exp_message = <<~EOS
         Expected Spy(anonymous)#foo[1] to have been called, was called with [2]
       EOS
 
@@ -86,7 +86,7 @@ module Tunit::Faux
 
       refute_predicate settler, :satisfied?
 
-      exp_message = <<-EOS.strip_heredoc
+      exp_message = <<~EOS
         Expected Spy(anonymous)#foo[] to have been called 2 times, was called 1 time
       EOS
 
@@ -108,7 +108,7 @@ module Tunit::Faux
 
       refute_predicate settler, :satisfied?
 
-      exp_message = <<-EOS.strip_heredoc
+      exp_message = <<~EOS
         Expected Spy(anonymous)#foo[1] to have been called 2 times, was called 3 times
       EOS
 
@@ -121,7 +121,7 @@ module Tunit::Faux
 
       refute_predicate settler, :satisfied?
 
-      exp_message = <<-EOS.strip_heredoc
+      exp_message = <<~EOS
         Expected Spy(anonymous)#foo[] to have been called
       EOS
 

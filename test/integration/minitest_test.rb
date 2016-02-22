@@ -167,7 +167,7 @@ module Integration
       end
       test_case = Minitest.run_one_method(test_klass, :test_assertions)
 
-      exp_message = <<-EOS.strip_heredoc
+      exp_message = <<~EOS
         Expected Spy(anonymous)#greet["world"] to have been called, was called with ["bye"]
       EOS
       refute test_case.passed?

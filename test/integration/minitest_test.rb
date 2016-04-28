@@ -7,7 +7,7 @@ module Integration
       def test_integration_mock
         test_klass = Class.new(Minitest::Test) do
           def test_mock
-            mock
+            assert_equal "anonymous", mock.name
           end
         end
         test_case = Minitest.run_one_method(test_klass, :test_mock)
@@ -31,7 +31,7 @@ module Integration
       def test_integration_spy
         test_klass = Class.new(Minitest::Test) do
           def test_spy
-            spy
+            assert_equal "anonymous", spy.name
           end
         end
         test_case = Minitest.run_one_method(test_klass, :test_spy)
@@ -55,7 +55,7 @@ module Integration
       def test_integration_double
         test_klass = Class.new(Minitest::Test) do
           def test_double
-            double
+            assert_equal "anonymous", double.name
           end
         end
         test_case = Minitest.run_one_method(test_klass, :test_double)

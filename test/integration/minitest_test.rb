@@ -1,83 +1,85 @@
 require "test_helper"
 require "tunit/faux"
 
+class IntegrationHelper < Minitest::Test
+  def build_test_case(&block)
+    klass = Class.new(IntegrationHelper, &block)
+    method_name = klass.instance_methods(false).grep(/test_/).first
+    klass.new(method_name).run
+  end
+end
+
 module Integration
   class MinitestTest
-    class MockTest < Minitest::Test
+    class MockTest < IntegrationHelper
       def test_integration_mock
-        test_klass = Class.new(Minitest::Test) do
+        test_case = build_test_case do
           def test_mock
             assert_equal "anonymous", mock.name
           end
         end
-        test_case = Minitest.run_one_method(test_klass, :test_mock)
 
         assert test_case.passed?
       end
 
-      def test_integration_mock_with_name
-        test_klass = Class.new(Minitest::Test) do
+      def integration_mock_with_name
+        test_case = build_test_case do
           def test_mock
             greeter = mock("Greeter")
 
             assert_equal "Greeter", greeter.name
           end
         end
-        test_case = Minitest.run_one_method(test_klass, :test_mock)
 
         assert test_case.passed?
       end
 
       def test_integration_spy
-        test_klass = Class.new(Minitest::Test) do
+        test_case = build_test_case do
           def test_spy
             assert_equal "anonymous", spy.name
           end
         end
-        test_case = Minitest.run_one_method(test_klass, :test_spy)
 
         assert test_case.passed?
       end
 
       def test_integration_spy_with_name
-        test_klass = Class.new(Minitest::Test) do
+        test_case = build_test_case do
           def test_spy
             greeter = spy("Greeter")
 
             assert_equal "Greeter", greeter.name
           end
         end
-        test_case = Minitest.run_one_method(test_klass, :test_spy)
 
         assert test_case.passed?
       end
 
       def test_integration_double
-        test_klass = Class.new(Minitest::Test) do
+        test_case = build_test_case do
           def test_double
             assert_equal "anonymous", double.name
           end
         end
-        test_case = Minitest.run_one_method(test_klass, :test_double)
 
         assert test_case.passed?
       end
 
       def test_integration_double_with_name
-        test_klass = Class.new(Minitest::Test) do
+        test_case = build_test_case do
           def test_double
             greeter = double("Greeter")
 
             assert_equal "Greeter", greeter.name
           end
         end
-        test_case = Minitest.run_one_method(test_klass, :test_double)
 
         assert test_case.passed?
       end
 
       def test_integration_double_name_with_stubs
-        test_klass = Class.new(Minitest::Test) do
+        test_case = build_test_case do
           def test_double
             greeter = double("Greeter", foo: 1)
 
@@ -85,13 +87,12 @@ module Integration
             assert_equal 1, greeter.foo
           end
         end
-        test_case = Minitest.run_one_method(test_klass, :test_double)
 
         assert test_case.passed?
       end
 
       def test_integration_double_with_only_stubs
-        test_klass = Class.new(Minitest::Test) do
+        test_case = build_test_case do
           def test_double
             greeter = double(foo: 1)
 
@@ -99,15 +100,14 @@ module Integration
             assert_equal 1, greeter.foo
           end
         end
-        test_case = Minitest.run_one_method(test_klass, :test_double)
 
         assert test_case.passed?
       end
     end
 
-    class StubTest < Minitest::Test
+    class StubTest < IntegrationHelper
       def test_integration_stub
-        test_klass = Class.new(Minitest::Test) do
+        test_case = build_test_case do
           def test_stub
             animal = "cat"
 
@@ -117,16 +117,15 @@ module Integration
             end
           end
         end
-        test_case = Minitest.run_one_method(test_klass, :test_stub)
 
         assert test_case.passed?
         assert_equal 1, test_case.assertions
       end
     end
 
-    class AssertionTest < Minitest::Test
+    class AssertionTest < IntegrationHelper
       def test_integration_assertions
-        test_klass = Class.new(Minitest::Test) do
+        test_case = build_test_case do
           def test_assertion
             greeter = spy
 
@@ -134,7 +133,13 @@ module Integration
 
             assert_received greeter, :greet
           end
+        end
 
+        assert test_case.passed?
+      end
+
+      def test_integration_assertion_with_arguments
+        test_case = build_test_case do
           def test_assertion_with_arguments
             greeter = spy
 
@@ -142,7 +147,13 @@ module Integration
 
             assert_received greeter, :greet, with: "world"
           end
+        end
 
+        assert test_case.passed?
+      end
+
+      def test_integration_assertion_with_times
+        test_case = build_test_case do
           def test_assertion_with_times
             greeter = spy
 
@@ -151,13 +162,25 @@ module Integration
 
             assert_received greeter, :greet, times: 2, with: "world"
           end
+        end
 
+        assert test_case.passed?
+      end
+
+      def test_integration_refution
+        test_case = build_test_case do
           def test_refution
             greeter = spy
 
             refute_received greeter, :greet
           end
+        end
 
+        assert test_case.passed?
+      end
+
+      def test_integration_refution_with_arguments
+        test_case = build_test_case do
           def test_refution_with_arguments
             greeter = spy
 
@@ -165,7 +188,13 @@ module Integration
 
             refute_received greeter, :greet, with: "world"
           end
+        end
 
+        assert test_case.passed?
+      end
+
+      def test_integration_refution_with_times
+        test_case = build_test_case do
           def test_refution_with_times
             greeter = spy
 
@@ -175,47 +204,28 @@ module Integration
             refute_received greeter, :greet, times: 1, with: "world"
           end
         end
-        test_case_assertion = Minitest.run_one_method(
-          test_klass,
-          :test_assertion,
-        )
-        test_case_assertion_with_arguments = Minitest.run_one_method(
-          test_klass,
-          :test_assertion_with_arguments,
-        )
-        test_case_assertion_with_times = Minitest.run_one_method(
-          test_klass,
-          :test_assertion_with_times,
-        )
-        test_case_refution = Minitest.run_one_method(
-          test_klass,
-          :test_refution,
-        )
-        test_case_refution_with_arguments = Minitest.run_one_method(
-          test_klass,
-          :test_refution_with_arguments,
-        )
-        test_case_refution_with_times = Minitest.run_one_method(
-          test_klass,
-          :test_refution_with_times,
-        )
 
-        assert test_case_assertion.passed?
-        assert test_case_assertion_with_arguments.passed?
-        assert test_case_assertion_with_times.passed?
-        assert test_case_refution.passed?
-        assert test_case_refution_with_arguments.passed?
-        assert test_case_refution_with_times.passed?
+        assert test_case.passed?
       end
 
       def test_integration_assertions_failure
-        test_klass = Class.new(Minitest::Test) do
+        test_case = build_test_case do
           def test_refution
             greeter = spy
 
             assert_received greeter, :greet
           end
+        end
 
+        exp_message = <<~EOS
+          Expected Spy(anonymous)#greet[] to have been called
+        EOS
+        refute test_case.passed?
+        assert_equal exp_message.strip, test_case.failure.error.to_s
+      end
+
+      def test_integration_assertions_failure_with_arguments
+        test_case = build_test_case do
           def test_refution_with_arguments
             greeter = spy
 
@@ -223,7 +233,17 @@ module Integration
 
             assert_received greeter, :greet, with: "world"
           end
+        end
 
+        exp_message = <<~EOS
+          Expected Spy(anonymous)#greet["world"] to have been called, was called with ["hello"]
+        EOS
+        refute test_case.passed?
+        assert_equal exp_message.strip, test_case.failure.error.to_s
+      end
+
+      def test_integration_assertions_failure_with_times
+        test_case = build_test_case do
           def test_refution_with_times
             greeter = spy
 
@@ -233,42 +253,12 @@ module Integration
             assert_received greeter, :greet, times: 1, with: "world"
           end
         end
-        test_case_refution = Minitest.run_one_method(
-          test_klass,
-          :test_refution,
-        )
-        test_case_refution_with_arguments = Minitest.run_one_method(
-          test_klass,
-          :test_refution_with_arguments,
-        )
-        test_case_refution_with_times = Minitest.run_one_method(
-          test_klass,
-          :test_refution_with_times,
-        )
-
-        exp_message = <<~EOS
-          Expected Spy(anonymous)#greet[] to have been called
-        EOS
-        refute test_case_refution.passed?
-        assert_equal exp_message.strip, test_case_refution.failure.error.to_s
-
-        exp_message = <<~EOS
-          Expected Spy(anonymous)#greet["world"] to have been called, was called with ["hello"]
-        EOS
-        refute test_case_refution_with_arguments.passed?
-        assert_equal(
-          exp_message.strip,
-          test_case_refution_with_arguments.failure.error.to_s,
-        )
 
         exp_message = <<~EOS
           Expected Spy(anonymous)#greet["world"] to have been called 1 time, was called 2 times
         EOS
-        refute test_case_refution_with_times.passed?
-        assert_equal(
-          exp_message.strip,
-          test_case_refution_with_times.failure.error.to_s,
-        )
+        refute test_case.passed?
+        assert_equal exp_message.strip, test_case.failure.error.to_s
       end
     end
   end

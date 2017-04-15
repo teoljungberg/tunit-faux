@@ -7,6 +7,14 @@ class MinitestHelper < Minitest::Test
     method_name = klass.runnable_methods.first
     klass.new(method_name).run
   end
+
+  def assert_passed(test_case)
+    assert test_case.passed?, test_case.failure
+  end
+
+  def refute_passed(test_case)
+    refute test_case.passed?, test_case.failure
+  end
 end
 
 class MockTest < MinitestHelper
@@ -17,7 +25,7 @@ class MockTest < MinitestHelper
       end
     end
 
-    assert test_case.passed?
+    assert_passed test_case
   end
 
   def test_integration_mock_with_name
@@ -29,7 +37,7 @@ class MockTest < MinitestHelper
       end
     end
 
-    assert test_case.passed?
+    assert_passed test_case
   end
 
   def test_integration_spy
@@ -39,7 +47,7 @@ class MockTest < MinitestHelper
       end
     end
 
-    assert test_case.passed?
+    assert_passed test_case
   end
 
   def test_integration_spy_with_name
@@ -51,7 +59,7 @@ class MockTest < MinitestHelper
       end
     end
 
-    assert test_case.passed?
+    assert_passed test_case
   end
 
   def test_integration_double
@@ -61,7 +69,7 @@ class MockTest < MinitestHelper
       end
     end
 
-    assert test_case.passed?
+    assert_passed test_case
   end
 
   def test_integration_double_with_name
@@ -73,7 +81,7 @@ class MockTest < MinitestHelper
       end
     end
 
-    assert test_case.passed?
+    assert_passed test_case
   end
 
   def test_integration_double_name_with_stubs
@@ -86,7 +94,7 @@ class MockTest < MinitestHelper
       end
     end
 
-    assert test_case.passed?
+    assert_passed test_case
   end
 
   def test_integration_double_with_only_stubs
@@ -99,7 +107,7 @@ class MockTest < MinitestHelper
       end
     end
 
-    assert test_case.passed?
+    assert_passed test_case
   end
 end
 
@@ -116,7 +124,7 @@ class StubTest < MinitestHelper
       end
     end
 
-    assert test_case.passed?
+    assert_passed test_case
     assert_equal 1, test_case.assertions
   end
 end
@@ -133,7 +141,7 @@ class AssertionTest < MinitestHelper
       end
     end
 
-    assert test_case.passed?
+    assert_passed test_case
   end
 
   def test_integration_assertion_with_arguments
@@ -147,7 +155,7 @@ class AssertionTest < MinitestHelper
       end
     end
 
-    assert test_case.passed?
+    assert_passed test_case
   end
 
   def test_integration_assertion_with_times
@@ -162,7 +170,7 @@ class AssertionTest < MinitestHelper
       end
     end
 
-    assert test_case.passed?
+    assert_passed test_case
   end
 
   def test_integration_refution
@@ -174,7 +182,7 @@ class AssertionTest < MinitestHelper
       end
     end
 
-    assert test_case.passed?
+    assert_passed test_case
   end
 
   def test_integration_refution_with_arguments
@@ -188,7 +196,7 @@ class AssertionTest < MinitestHelper
       end
     end
 
-    assert test_case.passed?
+    assert_passed test_case
   end
 
   def test_integration_refution_with_times
@@ -203,7 +211,7 @@ class AssertionTest < MinitestHelper
       end
     end
 
-    assert test_case.passed?
+    assert_passed test_case
   end
 
   def test_integration_assertions_failure
@@ -215,10 +223,10 @@ class AssertionTest < MinitestHelper
       end
     end
 
+    refute_passed test_case
     exp_message = <<~EOS
       Expected Spy(anonymous)#greet[] to have been called
     EOS
-    refute test_case.passed?
     assert_equal exp_message.strip, test_case.failure.error.to_s
   end
 
@@ -233,10 +241,10 @@ class AssertionTest < MinitestHelper
       end
     end
 
+    refute_passed test_case
     exp_message = <<~EOS
       Expected Spy(anonymous)#greet["world"] to have been called, was called with ["hello"]
     EOS
-    refute test_case.passed?
     assert_equal exp_message.strip, test_case.failure.error.to_s
   end
 
@@ -252,10 +260,10 @@ class AssertionTest < MinitestHelper
       end
     end
 
+    refute_passed test_case
     exp_message = <<~EOS
       Expected Spy(anonymous)#greet["world"] to have been called 1 time, was called 2 times
     EOS
-    refute test_case.passed?
     assert_equal exp_message.strip, test_case.failure.error.to_s
   end
 end

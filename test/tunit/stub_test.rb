@@ -78,7 +78,7 @@ module Tunit
       tc = self
 
       Stub.stub Date, :today, 9999 do
-        tc.assert_instance_of Fixnum, Date.today
+        tc.assert_instance_of 1.class, Date.today
       end
 
       assert_instance_of Time, Time.now
